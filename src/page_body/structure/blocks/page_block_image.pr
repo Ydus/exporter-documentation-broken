@@ -1,0 +1,35 @@
+{* Fetch block from injection context, expected type 'Heading' *}
+{[ const block = context /]}
+{[ let imgClass = "" /]}
+{[ let alignClass = "" /]}
+
+{* Create image with lightbox interaction, or ignore it if url is not set *}
+{[ if block.url ]}
+{* Align image based on the configuration *}
+{[ if block.alignment ]}
+    {[ switch block.alignment ]}
+        {[ case "Left" ]}
+            {[ imgClass = "img-fluid" /]}
+            {[ alignClass = "sn-text-left" /]}
+        {[ case "Center" ]}
+            {[ imgClass = "img-fluid" /]}
+            {[ alignClass = "sn-text-center" /]}
+        {[ case "Stretch" ]}
+            {[ imgClass = "img-fluid max" /]}
+            {[ alignClass = "sn-text-center" /]}
+    {[/]}
+{[ else ]}
+    {[ imgClass = "img-fluid" /]}
+    {[ alignClass = "sn-text-left" /]}
+{[/]}
+
+<div class="image-container {{ alignClass }}">
+{* Add <a class="popup-img" href="{{ block.url }}"> <img> </a> if you want to enable lightbox-functionality *}
+    <img src="{{ block.url }}" class="{{ imgClass }}" alt="" />
+    
+{* Add caption if set *}
+{[ if block.caption ]}
+    <p>{{ withHTMLNewlines(block.caption) }}</p>
+{[/]}
+</div>
+{[/]}

@@ -1,0 +1,32 @@
+{[ let page = context /]}
+{[ let hasHeading = false /]}
+{[ let hasTopLevelHeading = false /]}
+{[ for block in page.blocks ]}
+    {[ if block.type.equals("Heading") ]}
+        {[ hasHeading = true /]}
+    {[/]}
+    {[ if (block.type.equals("Heading") && block.headingType === 1) ]}
+        {[ hasTopLevelHeading = true /]}
+    {[/]}
+{[/]}
+<div id="content-nav-container">
+    <nav id="content-nav">
+        {[ if (hasHeading) ]}
+            <span class="content-nav-header">CONTENTS</span>
+            <ul>
+                {[ for block in page.blocks ]}
+                {[ if block.type.equals("Heading") ]}
+                    {[ let menuClass = "" /]}
+                    {[ switch block.headingType ]}
+                        {[ case 2 ]}
+                            {[ set menuClass = (hasTopLevelHeading ? "sub" : "") /]}
+                        {[ case 3 ]}
+                            {[ set menuClass = (hasTopLevelHeading ? "sub-2" : "sub") /]}
+                    {[/]}
+                    <li class="{{ menuClass }}"><a href="#{{ slugifyHeading(block) }}">{{ htmlSafeString(textBlockPlainText(block)) }}</a></li>
+                    {[/]}
+                {[/]}
+            </ul>
+        {[/]}
+    </nav>
+</div>

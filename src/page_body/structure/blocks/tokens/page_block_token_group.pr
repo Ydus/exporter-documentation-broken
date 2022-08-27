@@ -1,0 +1,9 @@
+{* Get block payload. We are fetching both block and group from context as we want to reuse this blueprint for different groups, not just the one defined inside block itself *}
+{[ const block = context.block /]}
+{[ const group = context.group /]}
+
+{[ let variant = block.variantKey /]}
+
+<div class="token-group-container variant-{{variant}}">
+  {[ inject "page_block_token_group_loop" context ({"block": block, "group": group }) /]}
+</div>

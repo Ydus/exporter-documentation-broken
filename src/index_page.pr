@@ -1,0 +1,19 @@
+<!-- Redirect to the first real page -->
+{[ let rootGroup = ds.rootDocumentationGroup() /]}
+{[ let page = firstPageFromTop(rootGroup) /]}
+{[ let url = pageUrl(page, ds.documentationDomain()) /]}
+
+<!DOCTYPE HTML>
+ 
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="1; url={{ url }}">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+ 
+<script>
+  window.location.href = "{{ url }}"
+</script>
+ 
+<title>Redirection to documentation</title>

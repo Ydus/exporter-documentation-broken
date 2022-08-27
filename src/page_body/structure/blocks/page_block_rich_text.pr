@@ -1,0 +1,58 @@
+{* Fetch rich from injection context, expected type 'DocumentationRichText' *}
+{[ const richText = context /]}
+
+{* Take all the spans, and create formatted string out of them *}
+{[ let finalString = "" /]}
+{[ for span in richText.spans ]}
+    {* Each span represents one part of the text with unique attributes *}
+    {[ let text = htmlSafeString(span.text) /]}
+    {* Apply attributes to this block. There can be multiple attributes, so we contain the text *}
+    {[ for attribute in span.attributes ]}
+        {[ switch attribute.type ]}
+            {[ case "Bold" ]}
+                {[ text = text.extended("<strong>", "</strong>") /]}
+            {[ case "Italic" ]}
+                {[ text = text.extended("<i>", "</i>") /]}
+            {[ case "Link" ]}
+                {[ let itemId = attribute.documentationItemId /]}
+                {[ if itemId ]}
+                    {* For dynamic links pointing to certain page, find that page (or group) and create the link. If page is not found, do nothing. If page is hidden, do nothing as well *}
+                    {[ let url = "" /]}
+                    {[ let page = ds.documentationPageById(itemId) /]}
+                    {[ if page ]}
+                        {[ if isExportable(page) ]}
+                            {[ url = pageUrl(page, ds.documentationDomain()) /]}
+                        {[/]}
+                    {[ else ]}
+                        {[ let group = ds.documentationGroupById(itemId) /]}
+                        {[ if group ]}
+                            {[ let firstPage = firstPageFromTop(group) /]}
+                            {[ if (firstPage && isExportable(firstPage) && isExportable(group)) ]}
+                                {[ url = pageUrl(firstPage, ds.documentationDomain()) /]}
+                            {[/]}
+                        {[/]}
+                    {[/]}
+
+                    {* Only extend link if actually present *}
+                    {[ if (url.count() > 0) ]}
+                        {[ let anchorTag = url.extended("<a href=\"", (attribute.openInNewWindow ? "\" target=\"_blank\">" : "\">")) /]}
+                        {[ text = text.extended(anchorTag, "</a>") /]}
+                    {[/]}
+                {[ else ]}
+                    {* For statically defined link, extend the text with it *}
+                    {[ if attribute.link ]}
+                        {[ let uri = htmlSafeUrl(attribute.link) /]}
+                        {[ let anchorTag = uri.extended("<a href=\"", (attribute.openInNewWindow ? "\" target=\"_blank\">" : "\">")) /]}
+                        {[ text = text.extended(anchorTag, "</a>") /]}
+                    {[/]}
+                {[/]}
+            {[ case "Strikethrough" ]}
+                {[ text = text.extended("<s>", "</s>") /]}
+            {[ case "Code" ]}
+                {[ text = text.extended("<mark>", "</mark>") /]}
+        {[/]}
+    {[/]}
+    {[ finalString = finalString.suffixed(text) /]}
+{[/]}
+{* Render final text string, replacing soft returns with linebreaks *}
+{{ withHTMLNewlines(finalString) }}

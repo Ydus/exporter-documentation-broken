@@ -1,0 +1,9 @@
+{[ let block = context /]}
+
+{[ let variant = block.variantKey /]}
+
+<div class="shortcut-container {{ variant }}">
+  {[ for shortcut in block.shortcuts ]}
+    {[ inject "page_block_shortcut" context shortcut /]}
+  {[/]}
+</div>
