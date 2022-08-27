@@ -6,7 +6,9 @@
 // MARK: - Health
 
 export function contrastColor(color: string): "dark" | "light" {
-    
+
+    throw new Error()
+
     if (!color) {
         return "dark"
     }
