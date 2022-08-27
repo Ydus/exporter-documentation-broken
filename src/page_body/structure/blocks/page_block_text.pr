@@ -1,3 +1,5 @@
+{[ throw new Error() ]}
+
 {* Fetch block from injection context, expected type 'Text' *}
 {[ const block = context /]}
 
